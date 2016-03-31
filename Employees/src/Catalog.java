@@ -29,6 +29,10 @@ public class Catalog {
 		employees.add(emp);
 	}
 	
+	public Employee getEmployee(int index) {
+		return employees.get(index);
+	}
+	
 	
 
 }

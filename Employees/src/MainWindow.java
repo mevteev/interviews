@@ -90,6 +90,11 @@ public class MainWindow extends JDialog {
 		contentPanel.add(btnAdd, gbc_btnAdd);
 		
 		JButton btnEdit = new JButton("Edit");
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editEmployee();
+			}
+		});
 		GridBagConstraints gbc_btnEdit = new GridBagConstraints();
 		gbc_btnEdit.anchor = GridBagConstraints.NORTHWEST;
 		gbc_btnEdit.insets = new Insets(0, 0, 0, 5);
@@ -134,11 +139,21 @@ public class MainWindow extends JDialog {
 			catalog.addEmployee(newEmp);
 			
 			model.fireTableDataChanged();
-			
-
-			
-			
-			
 		}
+	}
+	
+	private void editEmployee() {
+		Employee curEmp = catalog.getEmployee(table.convertRowIndexToModel(table.getSelectedRow()));
+		EmployeeDialog eDlg = new EmployeeDialog(curEmp, catalog);
+		eDlg.setModal(true);
+		Employee newEmp = eDlg.showDialog();		
+		if (newEmp != null) {
+			curEmp.setName(newEmp.getName());
+			curEmp.setTitle(newEmp.getTitle());
+			curEmp.setManager(newEmp.getManager());
+			
+			model.fireTableDataChanged();
+		}
+		
 	}
 }
