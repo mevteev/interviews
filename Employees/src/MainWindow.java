@@ -5,6 +5,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 import java.awt.GridBagLayout;
 
@@ -19,7 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-public class MainWindow extends JDialog {
+public class MainWindow extends JDialog implements TableModelListener {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
@@ -33,6 +35,8 @@ public class MainWindow extends JDialog {
 	 */
 	public static void main(String[] args) {
 		catalog = new Catalog();
+		
+		//catalog.readDB();
 		
 		try {
 			MainWindow dialog = new MainWindow();
@@ -75,6 +79,7 @@ public class MainWindow extends JDialog {
 		
 		table = new JTable(model);
 		scrollPane.setViewportView(table);
+		table.getModel().addTableModelListener(this);
 		
 		JButton btnAdd = new JButton("Add");
 		btnAdd.addActionListener(new ActionListener() {
@@ -143,17 +148,24 @@ public class MainWindow extends JDialog {
 	}
 	
 	private void editEmployee() {
-		Employee curEmp = catalog.getEmployee(table.convertRowIndexToModel(table.getSelectedRow()));
-		EmployeeDialog eDlg = new EmployeeDialog(curEmp, catalog);
-		eDlg.setModal(true);
-		Employee newEmp = eDlg.showDialog();		
-		if (newEmp != null) {
-			curEmp.setName(newEmp.getName());
-			curEmp.setTitle(newEmp.getTitle());
-			curEmp.setManager(newEmp.getManager());
-			
-			model.fireTableDataChanged();
+		if (table.getSelectedRow() != -1) {
+			Employee curEmp = catalog.getEmployee(table.convertRowIndexToModel(table.getSelectedRow()));
+			EmployeeDialog eDlg = new EmployeeDialog(curEmp, catalog);
+			eDlg.setModal(true);
+			Employee newEmp = eDlg.showDialog();		
+			if (newEmp != null) {
+				curEmp.setName(newEmp.getName());
+				curEmp.setTitle(newEmp.getTitle());
+				curEmp.setManager(newEmp.getManager());
+				
+				model.fireTableDataChanged();
+			}
 		}
+	}
+
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		catalog.saveDB();
 		
 	}
 }

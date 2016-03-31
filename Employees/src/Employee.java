@@ -3,6 +3,7 @@ import java.util.List;
 
 public class Employee {
 	
+	private int id;
 	private String name;
 	private String title;
 	
@@ -17,6 +18,19 @@ public class Employee {
 		this.name = name;
 		this.title = title;
 		this.manager = manager;
+		this.id = Catalog.getNextId();
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
+		
+		if (Catalog.getNextId() <= id) {
+			Catalog.setNextId(id + 1);
+		}
 	}
 	
 	public String getName() {
@@ -33,7 +47,7 @@ public class Employee {
 	}
 	
 	public String toString() {
-		return getTitle();
+		return getName();
 	}
 
 	public Employee getManager() {

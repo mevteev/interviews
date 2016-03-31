@@ -36,7 +36,7 @@ public class EmployeeDialog extends JDialog {
 		this.catalog = catalog;
 		
 		setTitle("Edit Employee");
-		setBounds(100, 100, 359, 178);
+		setBounds(100, 100, 395, 199);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -54,7 +54,8 @@ public class EmployeeDialog extends JDialog {
 		
 		JLabel lblManager = new JLabel("Manager");
 		
-		final JComboBox<Employee> cbManager = new JComboBox<Employee>();
+		final JComboBox cbManager = new JComboBox(catalog.getEmployeesArr());
+		
 		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
 		gl_contentPanel.setHorizontalGroup(
 			gl_contentPanel.createParallelGroup(Alignment.LEADING)
@@ -124,6 +125,7 @@ public class EmployeeDialog extends JDialog {
 		if (emp != null) {
 			tfName.setText(emp.getName());
 			tfTitle.setText(emp.getTitle());
+			cbManager.setSelectedItem(emp.getManager());
 		}
 	}
 	
