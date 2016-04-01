@@ -25,6 +25,13 @@ public class Employee {
 		this.id = Catalog.getNextId();
 	}
 	
+	public Employee(Employee emp) {
+		this.name = emp.name;
+		this.title = emp.title;
+		this.manager = emp.manager;
+		this.id = emp.getId();
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -50,10 +57,6 @@ public class Employee {
 		this.title = title;
 	}
 	
-	public String toString() {
-		return getName();
-	}
-
 	public Employee getManager() {
 		return manager;
 	}
@@ -74,6 +77,31 @@ public class Employee {
 	public void setManagerId(int managerId) {
 		this.managerId = managerId;
 	}
+	
+	
+	public String toString() {
+		return getName();
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof Employee)) {
+			return false;
+		}
+		Employee other = (Employee) obj;
+		if (id != other.id) {
+			return false;
+		}
+		return true;
+	}
+	
 	
 
 }

@@ -14,9 +14,11 @@ public class EmployeesModel extends AbstractTableModel {
 	
 	private String[] columnNames = {"ID", "Name", "Title", "Manager"};
 	
+	
 	//private List<Employee> data;
 	
 	private HashMap<Integer, Employee> dataMap;
+	private Catalog catalog;
 	
 	
 	/*
@@ -24,8 +26,9 @@ public class EmployeesModel extends AbstractTableModel {
 		this.data = data;
 	}*/
 	
-	EmployeesModel(HashMap<Integer, Employee> dataMap) {
-		this.dataMap = dataMap;
+	EmployeesModel(Catalog catalog) {
+		this.dataMap = catalog.getEmployeesMap();
+		this.catalog = catalog;
 	}
 
 
@@ -33,29 +36,42 @@ public class EmployeesModel extends AbstractTableModel {
 	public int getColumnCount() {
 		return columnNames.length;
 	}
+	
+	@Override
+	public String getColumnName(int col) {
+		return columnNames[col];
+	}
 
 	@Override
 	public int getRowCount() {
 		//return data.size();
-		return dataMap.size();
+		//return dataMap.size();
+		return catalog.getIdx().size();
 	}
 
 	@Override
 	public Object getValueAt(int row, int col) {
-		Object[] entries = dataMap.entrySet().toArray();
-		@SuppressWarnings("unchecked")
-		Map.Entry<Integer, Employee> entry = (Map.Entry<Integer, Employee>)entries[row];  
 		
+		
+		Integer index = (Integer) catalog.getIdx().toArray()[row];
+		
+		Employee bufferEmp = catalog.getBufferEntryById(index);
+		Employee emp;
+		if (bufferEmp == null) {
+			emp = dataMap.get(index);
+		} else {
+			emp = bufferEmp;
+		}
 		
 		switch(col) {
 		case 0:
-			return entry.getValue().getId();
+			return emp.getId();
 		case 1: 
-			return entry.getValue().getName();
+			return emp.getName();
 		case 2:
-			return entry.getValue().getTitle();
+			return emp.getTitle();
 		case 3:
-			return entry.getValue().getManager();
+			return emp.getManager();
 		default:
 			return null;
 		}
