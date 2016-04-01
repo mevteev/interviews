@@ -12,9 +12,11 @@ import java.awt.GridBagLayout;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
@@ -75,7 +77,8 @@ public class MainWindow extends JDialog implements TableModelListener {
 		gbc_scrollPane.gridy = 0;
 		contentPanel.add(scrollPane, gbc_scrollPane);
 		
-		model = new EmployeesModel(catalog.getEmployees());
+		//model = new EmployeesModel(catalog.getEmployees());
+		model = new EmployeesModel(catalog.getEmployeesMap());
 		
 		table = new JTable(model);
 		scrollPane.setViewportView(table);
@@ -110,6 +113,7 @@ public class MainWindow extends JDialog implements TableModelListener {
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				deleteEmployee();
 			}
 		});
 		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
@@ -149,7 +153,11 @@ public class MainWindow extends JDialog implements TableModelListener {
 	
 	private void editEmployee() {
 		if (table.getSelectedRow() != -1) {
-			Employee curEmp = catalog.getEmployee(table.convertRowIndexToModel(table.getSelectedRow()));
+			//Employee curEmp = catalog.getEmployee(table.convertRowIndexToModel(table.getSelectedRow()));
+			
+			Integer id = (Integer) table.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 0);
+			Employee curEmp = catalog.getEmployeeById(id);
+			
 			EmployeeDialog eDlg = new EmployeeDialog(curEmp, catalog);
 			eDlg.setModal(true);
 			Employee newEmp = eDlg.showDialog();		
@@ -160,6 +168,20 @@ public class MainWindow extends JDialog implements TableModelListener {
 				
 				model.fireTableDataChanged();
 			}
+		}
+	}
+	
+	private void deleteEmployee() {
+		if (table.getSelectedRow() != -1) {
+			Integer id = (Integer) table.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 0);
+			Employee curEmp = catalog.getEmployeeById(id);
+			
+			if (JOptionPane.showConfirmDialog(null, "Do you want to delete " + curEmp + " ?", "Delete?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+				catalog.deleteEmployee(curEmp);
+				model.fireTableDataChanged();
+				
+			}
+			
 		}
 	}
 

@@ -10,6 +10,10 @@ public class Employee {
 	private Employee manager;
 	private List<Employee> subordinates;
 	
+	private int managerId;
+
+
+	
 	public Employee() {
 		
 	}
@@ -62,5 +66,14 @@ public class Employee {
 	public void setSubordinates(List<Employee> subordinates) {
 		this.subordinates = subordinates;
 	}
+	
+	public int getManagerId() {
+		return managerId;
+	}
+
+	public void setManagerId(int managerId) {
+		this.managerId = managerId;
+	}
+	
 
 }
